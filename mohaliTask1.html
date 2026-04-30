@@ -1,0 +1,73 @@
+<!-- <template>
+    <lightning-card class="slds-card" icon-name="Exam-info">
+        <div class="slds-p-around_medium">
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                <div class="slds-col slds-size_1-of-3">
+                    <lightning-combobox label="Exam Type" value={selectedExamType} options={examOptions}
+                        onchange={handleChange}></lightning-combobox>
+                </div>
+                <div class="slds-col slds-size_1-of-3">
+                    <lightning-input label="Parent Id" onchange={handleManualId}>
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-6 slds-align-bottom">
+                    <lightning-button-icon icon-class="" icon-name="utility:refresh" alternative-text="Refresh"
+                        onclick={loadData}></lightning-button-icon>
+                </div>
+                <div class="slds-col slds-size_1-of-3 slds-align-bottom">
+                    <lightning-button variant="brand" label={buttonLabel} onclick={handleNew}></lightning-button>
+                </div>
+                <! <div>
+                    <lightning-datatable key-field="id" data={data} columns={columns}></lightning-datatable>
+                </div> -->
+<!-- </div>
+        </div>
+    </lightning-card>
+    <lightning-card>
+        <div>
+            <lightning-datatable key-field="Id" data={data} columns={columns}></lightning-datatable>
+        </div>
+    </lightning-card>
+</template> -->
+
+<template>
+    <lightning-card title="Exam Manager" icon-name="standard:education">
+
+        <div class="slds-p-around_medium">
+
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+
+                <!-- Exam Type -->
+                <div class="slds-col slds-size_1-of-3">
+                    <lightning-combobox label="Exam Type" value={selectedExamType} options={examOptions}
+                        onchange={handleChange}>
+                    </lightning-combobox>
+                </div>
+
+                <!-- Search -->
+                <div class="slds-col slds-size_1-of-3">
+                    <lightning-input type="text" label="Search by Name" onchange={handleSearch}>
+                    </lightning-input>
+                </div>
+
+                <!-- Refresh Button -->
+                <div class="slds-col slds-size_1-of-6 slds-align-bottom">
+                    <lightning-button-icon icon-name="utility:refresh" alternative-text="Refresh" onclick={loadData}>
+                    </lightning-button-icon>
+                </div>
+
+                <!-- New Button -->
+                <div class="slds-col slds-size_1-of-6 slds-align-bottom">
+                    <lightning-button variant="brand" label={buttonLabel} onclick={handleNew}>
+                    </lightning-button>
+                </div>
+
+            </div>
+
+            <!-- Data Table -->
+            <lightning-datatable key-field="Id" data={data} columns={columns}>
+            </lightning-datatable>
+
+        </div>
+    </lightning-card>
+</template>
