@@ -71,3 +71,77 @@
         </div>
     </lightning-card>
 </template>
+//////
+
+<template>
+    <lightning-card title="Exam Manager" icon-name="standard:education">
+
+        <div class="slds-p-around_medium">
+
+            <!-- Top Controls -->
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+
+                <!-- Exam Type -->
+                <div class="slds-col slds-size_1-of-3">
+                    <lightning-combobox
+                        label="Exam Type"
+                        value={selectedExamType}
+                        options={examOptions}
+                        onchange={handleChange}>
+                    </lightning-combobox>
+                </div>
+
+                <!-- Search -->
+                <div class="slds-col slds-size_1-of-3">
+                    <lightning-input
+                        type="search"
+                        label="Search"
+                        placeholder="Search by name"
+                        onchange={handleSearch}>
+                    </lightning-input>
+                </div>
+
+                <!-- Refresh -->
+                <div class="slds-col slds-size_1-of-6 slds-align-bottom">
+                    <lightning-button-icon
+                        icon-name="utility:refresh"
+                        alternative-text="Refresh"
+                        onclick={loadData}>
+                    </lightning-button-icon>
+                </div>
+
+                <!-- New Button -->
+                <div class="slds-col slds-size_1-of-6 slds-align-bottom">
+                    <lightning-button
+                        variant="brand"
+                        label={buttonLabel}
+                        onclick={handleNew}>
+                    </lightning-button>
+                </div>
+
+            </div>
+
+            <!-- Data Table -->
+            <lightning-datatable
+                key-field="Id"
+                data={data}
+                columns={columns}
+                hide-checkbox-column>
+            </lightning-datatable>
+
+            <!-- Footer -->
+            <template if:true={data.length}>
+                <div class="slds-m-top_small slds-text-align_right">
+                    Total Records: {data.length}
+                </div>
+            </template>
+
+            <template if:false={data.length}>
+                <div class="slds-text-align_center slds-m-top_medium">
+                    No records found
+                </div>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>
