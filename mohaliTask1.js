@@ -1,115 +1,12 @@
-// import { LightningElement, track, api } from 'lwc';
-// import getExams from '@salesforce/apex/mohaliClass1.getExams';
-// import createExam from '@salesforce/apex/mohaliClass1.createExam';
-// import Name from '@salesforce/schema/Account.Name';
-
-// export default class MohaliTask1 extends LightningElement {
-
-//     @track selectedExamType = 'External Exam';
-//     @track data = [];
-//     @track parentId;
-//     @api recordId;
-
-//     examOptions = [
-//         { label: 'External Exam', value: 'External Exam' },
-//         { label: 'School Exams', value: 'School Exams' },
-//         { label: 'Government Exam', value: 'Government Exams' },
-//         { label: 'School Grades', value: 'School Grades' }
-//     ];
-
-//     columns = [
-//         { label: 'Name', fieldName: 'Name' },
-//         { label: 'Grade', fieldName: 'Grade__c' },
-//         { label: 'Status', fieldName: 'Status__c' },
-//         { label: 'Parent Name', fieldName: 'parentName' }
-//     ];
-
-//     connectedCallback() {
-//         this.loadData();
-//     }
-
-//     loadData() {
-//         getExams({
-//             examType: this.selectedExamType,
-//             parentId: this.recordId
-//         })
-//         .then(result => {
-//             console.log('i am here');
-//             console.log('DATA ---> ', JSON.stringify(result));
-//             this.data = result.map(item => {
-//                 return {
-//                     ...item,
-//                     parentName: item.Student__r ? item.Student__r.Name : ''
-//                 };
-//             });
-//         })
-//         .catch(error => {
-//             console.error(error);
-//         });
-//     }
-
-//     handleChange(event) {
-//         this.selectedExamType = event.target.value;
-//         this.loadData();
-//     }
-
-//     // onParentSelect(event) {
-//     //     console.log('EVENT ---> ', event.detail);
-//     //         this.parentId = event.detail.recordId;
-//     //          this.loadData();
-//     // }
-//     //     handleManualId(event) {
-//     //     this.parentId = event.target.value;
-//     //     }
-
-//     handleNew() {
-//     const name = prompt('Enter Exam name');
-
-//     if (!name) return;
-
-//     if (!this.parentId) {
-//         alert('Assign with parent');
-//         return ;
-//     }
-
-//     createExam({
-//             Name: Name,
-//             type: this.selectedExamType,
-//             parentId: this.recordId
-//         })
-//         .then(() => {
-//             console.log('Record created');
-//             this.loadData();
-//         })
-//         .catch(error => {
-//             console.error('CREATE ERROR ', JSON.stringify(error));
-//         });
-//     }
-
-//     get buttonLabel() {
-//         return "New " + this.selectedExamType;
-//     }
-
-//     handleSearch(event) {
-//         const keyword = event.target.value.toLowerCase();
-
-//         this.data = this.data.filter(item =>
-//             item.Name.toLowerCase().includes(keyword)
-//         );
-//     }
-// }
-
-
-
 import { LightningElement, track, api } from 'lwc';
 import getExams from '@salesforce/apex/mohaliClass1.getExams';
 import createExam from '@salesforce/apex/mohaliClass1.createExam';
 
 export default class MohaliTask1 extends LightningElement {
 
-    @track selectedExamType = 'External Exam';
+    @track selectedExamType = '';
     @track data = [];
-    @track allData = []; // for search
+    @track allData = []; 
     @api recordId;
 
     examOptions = [
@@ -122,11 +19,13 @@ export default class MohaliTask1 extends LightningElement {
     columns = [
         { label: 'Name', fieldName: 'Name' },
         { label: 'Grade', fieldName: 'Grade__c' },
-        { label: 'Status', fieldName: 'Status__c' },
+        { label: 'status', fieldName: 'status__c' },
+        { label: 'Feedback', fieldName: 'Feedback__c'},
         { label: 'Parent Name', fieldName: 'parentName' }
     ];
 
     connectedCallback() {
+        console.log( this.recordId);
         this.loadData();
     }
 
@@ -139,14 +38,14 @@ export default class MohaliTask1 extends LightningElement {
             this.allData = result.map(item => {
                 return {
                     ...item,
-                    parentName: item.Student__r ? item.Student__r.Name : ''
+                    parentName: item.student__r ? item.student__r.Name : ''
                 };
             });
 
             this.data = [...this.allData];
         })
         .catch(error => {
-            console.error('ERROR ---> ', error);
+            console.error( error);
         });
     }
 
@@ -157,8 +56,11 @@ export default class MohaliTask1 extends LightningElement {
 
     handleNew() {
         const name = prompt('Enter Exam name');
-
         if (!name) return;
+
+        const marksInput = prompt('Enter a marks');
+        if(!marksInput) return ;
+        const marks = parseInt(marksInput,10);
 
         if (!this.recordId) {
             alert('Parent record not found. Please use this on a record page.');
@@ -168,7 +70,8 @@ export default class MohaliTask1 extends LightningElement {
         createExam({
             Name: name,
             type: this.selectedExamType,
-            parentId: this.recordId
+            parentId: this.recordId,
+            marks:marks
         })
         .then(() => {
             this.loadData();
@@ -187,121 +90,6 @@ export default class MohaliTask1 extends LightningElement {
 
         this.data = this.allData.filter(item =>
             item.Name && item.Name.toLowerCase().includes(keyword)
-        );
-    }
-}
-
-///
-
-
-import { LightningElement, track, api } from 'lwc';
-import getExams from '@salesforce/apex/mohaliClass1.getExams';
-import createExam from '@salesforce/apex/mohaliClass1.createExam';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-
-export default class MohaliTask1 extends LightningElement {
-
-    @track selectedExamType = 'External Exam';
-    @track data = [];
-    @track allData = [];
-
-    @api recordId;
-
-    examOptions = [
-        { label: 'External Exam', value: 'External Exam' },
-        { label: 'School Exam', value: 'School Exam' },
-        { label: 'Government Exam', value: 'Government Exam' },
-        { label: 'School Grade', value: 'School Grade' }
-    ];
-
-    columns = [
-        { label: 'Name', fieldName: 'Name' },
-        { label: 'Grade', fieldName: 'Grade__c' },
-        { label: 'Status', fieldName: 'status__c' }, // ✅ FIXED
-        { label: 'Student Name', fieldName: 'parentName' }
-    ];
-
-    connectedCallback() {
-        this.loadData();
-    }
-
-    // 🔹 Fetch Data
-    loadData() {
-        if (!this.recordId) return;
-
-        getExams({
-            examType: this.selectedExamType,
-            parentId: this.recordId
-        })
-        .then(result => {
-            this.allData = result.map(item => {
-                return {
-                    ...item,
-                    parentName: item.student__r ? item.student__r.Name : ''
-                };
-            });
-
-            this.data = [...this.allData];
-        })
-        .catch(error => {
-            console.error('ERROR:', error);
-        });
-    }
-
-    // 🔹 Picklist Change
-    handleChange(event) {
-        this.selectedExamType = event.detail.value;
-        this.loadData();
-    }
-
-    // 🔹 Create New Record
-    handleNew() {
-        const name = prompt('Enter Exam Name');
-
-        if (!name) return;
-
-        if (!this.recordId) {
-            this.showToast('Error', 'No parent record found', 'error');
-            return;
-        }
-
-        createExam({
-            Name: name,
-            type: this.selectedExamType,
-            parentId: this.recordId
-        })
-        .then(() => {
-            this.showToast('Success', 'Exam Created', 'success');
-            this.loadData();
-        })
-        .catch(error => {
-            console.error('CREATE ERROR:', error);
-            this.showToast('Error', 'Failed to create exam', 'error');
-        });
-    }
-
-    // 🔹 Button Label
-    get buttonLabel() {
-        return 'New ' + this.selectedExamType;
-    }
-
-    // 🔹 Search
-    handleSearch(event) {
-        const keyword = event.target.value.toLowerCase();
-
-        this.data = this.allData.filter(item =>
-            item.Name && item.Name.toLowerCase().includes(keyword)
-        );
-    }
-
-    // 🔹 Toast
-    showToast(title, message, variant) {
-        this.dispatchEvent(
-            new ShowToastEvent({
-                title,
-                message,
-                variant
-            })
         );
     }
 }
