@@ -37,3 +37,28 @@ public with sharing class mohaliClass1 {
         return ex;
     }
 }
+
+//
+
+@AuraEnabled(cacheable=true)
+public static List<Exam__c> getExams(String examType, Id parentId){
+    return [
+        SELECT Id, Name, Grade__c, status__c, student__c, student__r.Name
+        FROM Exam__c
+        WHERE Exam_Type__c = :examType
+        AND student__c = :parentId
+        ORDER BY CreatedDate DESC
+    ];
+}
+
+@AuraEnabled
+public static Exam__c createExam(String Name, String type, Id parentId){
+    Exam__c ex = new Exam__c();
+    ex.Name = Name;
+    ex.Exam_Type__c = type;
+    ex.status__c = 'Active';
+    ex.student__c = parentId;
+
+    insert ex;
+    return ex;
+}
