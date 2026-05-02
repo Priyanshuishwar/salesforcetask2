@@ -1,3 +1,4 @@
+
 public with sharing class mohaliClass1 {
 
     @AuraEnabled(cacheable=true)
